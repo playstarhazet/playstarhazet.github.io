@@ -514,14 +514,27 @@
 
         function togglePlay() {
             const playPauseBtn = document.getElementById('playPauseBtn');
+            
             if (isPlaying) {
                 beforeAudio.pause();
                 afterAudio.pause();
                 playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
             } else {
-                beforeAudio.play();
-                afterAudio.play();
-                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                // Reset both audio elements
+                beforeAudio.currentTime = 0;
+                afterAudio.currentTime = 0;
+                
+                // Set mute states before playing
+                beforeAudio.muted = (currentMode !== 'before');
+                afterAudio.muted = (currentMode === 'before');
+                
+                // Use Promise.all to ensure both tracks start together
+                Promise.all([
+                    beforeAudio.play().catch(e => console.log('Play error:', e)),
+                    afterAudio.play().catch(e => console.log('Play error:', e))
+                ]).then(() => {
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                });
             }
             isPlaying = !isPlaying;
         }
@@ -615,19 +628,6 @@
         afterAudio.addEventListener('ended', function() {
             isPlaying = false;
             document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
-        });
-
-        // Add this to keep tracks synchronized
-        beforeAudio.addEventListener('play', () => {
-            const time = beforeAudio.currentTime;
-            afterAudio.currentTime = time;
-            afterAudio.play();
-        });
-
-        afterAudio.addEventListener('play', () => {
-            const time = afterAudio.currentTime;
-            beforeAudio.currentTime = time;
-            beforeAudio.play();
         });
 
         function copyEmail(event) {
