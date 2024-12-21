@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playstar Hazet - Mixing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .photo {
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: transparent;
+        }
+
+        .photo img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .intro {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.8;
+            margin-bottom: 60px;
+            color: #222;
+        }
+
+        .intro h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #222, #444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .demo {
+            margin-bottom: 30px;
+        }
+
+        .demo h2 {
+            text-align: center;
+        }
+
+        .demo .toggle-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .demo .toggle-buttons button {
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            background-color: #f4f4f4;
+            color: #333;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .demo .toggle-buttons button.active {
+            background-color: #333;
+            color: white;
+        }
+
+        .demo .toggle-buttons button:not(:last-child) {
+            border-right: none;
+        }
+
+        .demo .track-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .demo .track-buttons button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pricing {
+            margin-bottom: 30px;
+        }
+
+        .pricing h2 {
+            text-align: center;
+        }
+
+        .pricing ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .pricing li {
+            line-height: 1.6;
+        }
+
+        .contact {
+            margin-bottom: 30px;
+        }
+
+        .contact h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .contact p {
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .contact a {
+            text-decoration: none;
+            color: #00788C;
+            font-weight: bold;
+        }
+
+        .contact-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-icons a {
+            background: #f8f8f8;
+            padding: 15px 25px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .contact-icons a:hover {
+            background: #222;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .contact-icons i {
+            font-size: 24px;
+        }
+
+        .player-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 5px;
+        }
+
+        #playPauseBtn {
+            background: linear-gradient(45deg, #222, #444);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease;
+        }
+
+        #playPauseBtn:hover {
+            transform: scale(1.05);
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(45deg, #00788C, #009aaf);
+            border-radius: 3px;
+            width: 0%;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #volumeSlider {
+            width: 100px;
+        }
+
+        .track-btn {
+            background: white;
+            border: 2px solid #eee;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 180px;
+            text-align: center;
+        }
+
+        .track-btn.active {
+            background: linear-gradient(45deg, #222, #444);
+            border-color: transparent;
+            transform: translateY(-3px);
+        }
+
+        .track-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .track-btn.active:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .demo h2, .pricing h2, .contact h2 {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        .pricing {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .pricing ul {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .pricing li {
+            font-size: 16px;
+            padding: 8px 0;
+        }
+
+        .pricing li strong {
+            color: #222;
+            font-size: 18px;
+        }
+
+        .contact {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .contact-icons a {
+            background: #f8f8f8;
+            padding: 15px 25px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-icons a:hover {
+            background: #222;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .contact-icons i {
+            font-size: 24px;
+        }
+
+        .player-container h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            color: #222;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 20px auto;
+            }
+
+            .contact-icons {
+                gap: 10px;
+            }
+
+            .contact-icons a {
+                width: calc(50% - 10px);
+                min-width: unset;
+                padding: 12px 15px;
+            }
+
+            .track-buttons {
+                flex-wrap: wrap;
+            }
+
+            .track-btn {
+                width: calc(50% - 5px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .intro h1 {
+                font-size: 36px;
+            }
+
+            .intro {
+                font-size: 20px;
+            }
+
+            .player-controls {
+                flex-wrap: wrap;
+            }
+
+            .volume-control {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
+
+        /* Add these styles for the notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #222;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Photo Section -->
+        <div class="photo">
+            <img src="photo.jpg" alt="Artist Photo with Logo">
+        </div>
+
+        <!-- Intro Section -->
+        <div class="intro">
+            <h1>Yo! This is Playstar Hazet</h1>
+            I make beatz bang hard and vocals stand out<br>
+            Hit me up if you want to get your music sound dope
+        </div>
+
+        <!-- Demo Section -->
+        <div class="demo">
+            <div class="player-container">
+                <h2>Demo</h2>
+                <div class="toggle-buttons">
+                    <button class="before active" onclick="switchTrackMode('before')">Before</button>
+                    <button class="after" onclick="switchTrackMode('after')">After</button>
+                </div>
+                
+                <div class="player-controls">
+                    <button id="playPauseBtn" onclick="togglePlay()">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress"></div>
+                        </div>
+                    </div>
+                    <div class="volume-control">
+                        <i class="fas fa-volume-up"></i>
+                        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+                    </div>
+                </div>
+
+                <div class="track-buttons">
+                    <button onclick="selectTrack(1)" class="track-btn active">Track 1</button>
+                    <button onclick="selectTrack(2)" class="track-btn">Track 2</button>
+                    <button onclick="selectTrack(3)" class="track-btn">Track 3</button>
+                    <button onclick="selectTrack(4)" class="track-btn">Track 4</button>
+                </div>
+            </div>
+            <audio id="track1-before" src="track1-before.mp3"></audio>
+            <audio id="track1-after" src="track1-after.mp3"></audio>
+            <audio id="track2-before" src="track2-before.mp3"></audio>
+            <audio id="track2-after" src="track2-after.mp3"></audio>
+            <audio id="track3-before" src="track3-before.mp3"></audio>
+            <audio id="track3-after" src="track3-after.mp3"></audio>
+            <audio id="track4-before" src="track4-before.mp3"></audio>
+            <audio id="track4-after" src="track4-after.mp3"></audio>
+        </div>
+
+        <!-- Pricing Section -->
+        <div class="pricing">
+            <h2>Pricing</h2>
+            <ul>
+                <li><strong>10 stems - $35 / 140zł</strong></li>
+                <li><strong>Unlimited - $50 / 200zł</strong></li>
+                <br>
+                <li><strong>Included with every MIX</strong></li>
+                <li>&#10003; Mastering for Streaming</li>
+                <li>&#10003; Vocals Alignment</li>
+                <li>&#10003; FX & Vocal Effects Design</li>
+                <li>&#10003; Instrumental & Acapella Files</li>
+                <li>&#10003; 3 Free Revisions</li>
+                <br>
+                <li><strong>Additional Services</strong></li>
+                <li>- Manual Vocal Tuning - $10-25</li>
+                <li>- Radio-Ready Edit - $10</li>
+                <li>- Instrument Replacement/Layering - $15</li>
+                <li>- Performance Track - $15</li>
+                <li>- Stems export - $10</li>
+            </ul>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact">
+            <h2>Contact</h2>
+            <p>Feel free to reach out for inquiries or collaborations!</p>
+            <div class="contact-icons">
+                <a href="#" onclick="copyEmail(event)">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+                <a href="https://instagram.com/playstar_hazet" target="_blank">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+                <a href="https://soundcloud.com/hazet01" target="_blank">
+                    <i class="fab fa-soundcloud"></i> SoundCloud
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTrack = 1;
+        let currentMode = 'before';
+        let currentAudio = document.getElementById('track1-before');
+        let isPlaying = false;
+
+        function updateProgress() {
+            const progress = document.querySelector('.progress');
+            progress.style.width = (currentAudio.currentTime / currentAudio.duration * 100) + '%';
+        }
+
+        function togglePlay() {
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            if (isPlaying) {
+                currentAudio.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                currentAudio.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function updateActiveButton() {
+            const buttons = document.querySelectorAll('.toggle-buttons button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.${currentMode}`).classList.add('active');
+        }
+
+        function switchTrackMode(mode) {
+            if (currentMode === mode) return;
+
+            const wasPlaying = !currentAudio.paused;
+            const currentTime = currentAudio.currentTime;
+            currentAudio.pause();
+            
+            currentMode = mode;
+            updateActiveButton();
+
+            const newAudioId = `track${currentTrack}-${mode}`;
+            currentAudio = document.getElementById(newAudioId);
+            currentAudio.currentTime = currentTime;
+            
+            if (wasPlaying) {
+                currentAudio.play();
+                document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        }
+
+        function selectTrack(trackNumber) {
+            if (currentTrack === trackNumber) return;
+
+            const wasPlaying = !currentAudio.paused;
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            
+            // Update active track button
+            document.querySelectorAll('.track-btn').forEach((btn, index) => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.track-btn:nth-child(${trackNumber})`).classList.add('active');
+
+            currentTrack = trackNumber;
+            const newAudioId = `track${currentTrack}-${currentMode}`;
+            currentAudio = document.getElementById(newAudioId);
+            
+            if (wasPlaying) {
+                currentAudio.play();
+                document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        }
+
+        // Add event listeners
+        document.querySelector('.progress-bar').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            currentAudio.currentTime = pos * currentAudio.duration;
+        });
+
+        document.getElementById('volumeSlider').addEventListener('input', function(e) {
+            currentAudio.volume = e.target.value;
+        });
+
+        // Update progress bar and time
+        setInterval(updateProgress, 100);
+
+        // Handle audio ending
+        currentAudio.addEventListener('ended', function() {
+            isPlaying = false;
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+        });
+
+        function copyEmail(event) {
+            event.preventDefault();
+            const email = 'playstarhazet@gmail.com';
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(email).then(() => {
+                // Show notification
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.textContent = 'Email address copied';
+                document.body.appendChild(notification);
+                
+                // Show the notification
+                setTimeout(() => notification.classList.add('show'), 10);
+                
+                // Remove the notification after 2 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
