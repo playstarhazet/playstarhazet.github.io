@@ -592,8 +592,15 @@
         });
 
         document.getElementById('volumeSlider').addEventListener('input', function(e) {
-            beforeAudio.volume = e.target.value;
-            afterAudio.volume = e.target.value;
+            // Check if volume control is supported
+            if (beforeAudio.volume !== undefined && afterAudio.volume !== undefined) {
+                beforeAudio.volume = e.target.value;
+                afterAudio.volume = e.target.value;
+            } else {
+                // Display message or hide volume control for iOS
+                this.disabled = true;
+                this.parentElement.style.display = 'none';
+            }
         });
 
         // Update progress bar and time
@@ -645,6 +652,20 @@
                 }, 2000);
             });
         }
+
+        // Add this function to check device on page load
+        function checkVolumeSupport() {
+            const volumeControl = document.querySelector('.volume-control');
+            // Check if running on iOS
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
+            if (isIOS) {
+                volumeControl.style.display = 'none';
+            }
+        }
+
+        // Call the function when the page loads
+        window.addEventListener('load', checkVolumeSupport);
     </script>
 </body>
 </html>
