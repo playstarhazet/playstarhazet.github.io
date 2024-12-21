@@ -501,21 +501,26 @@
     <script>
         let currentTrack = 1;
         let currentMode = 'before';
-        let currentAudio = document.getElementById('track1-before');
+        let beforeAudio = document.getElementById('track1-before');
+        let afterAudio = document.getElementById('track1-after');
         let isPlaying = false;
 
         function updateProgress() {
             const progress = document.querySelector('.progress');
-            progress.style.width = (currentAudio.currentTime / currentAudio.duration * 100) + '%';
+            const currentTime = currentMode === 'before' ? beforeAudio.currentTime : afterAudio.currentTime;
+            const duration = currentMode === 'before' ? beforeAudio.duration : afterAudio.duration;
+            progress.style.width = (currentTime / duration * 100) + '%';
         }
 
         function togglePlay() {
             const playPauseBtn = document.getElementById('playPauseBtn');
             if (isPlaying) {
-                currentAudio.pause();
+                beforeAudio.pause();
+                afterAudio.pause();
                 playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
             } else {
-                currentAudio.play();
+                beforeAudio.play();
+                afterAudio.play();
                 playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
             }
             isPlaying = !isPlaying;
@@ -531,30 +536,24 @@
 
         function switchTrackMode(mode) {
             if (currentMode === mode) return;
-
-            const wasPlaying = !currentAudio.paused;
-            const currentTime = currentAudio.currentTime;
-            currentAudio.pause();
-            
             currentMode = mode;
             updateActiveButton();
 
-            const newAudioId = `track${currentTrack}-${mode}`;
-            currentAudio = document.getElementById(newAudioId);
-            currentAudio.currentTime = currentTime;
-            
-            if (wasPlaying) {
-                currentAudio.play();
-                document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+            if (mode === 'before') {
+                beforeAudio.muted = false;
+                afterAudio.muted = true;
+            } else {
+                beforeAudio.muted = true;
+                afterAudio.muted = false;
             }
         }
 
         function selectTrack(trackNumber) {
             if (currentTrack === trackNumber) return;
 
-            const wasPlaying = !currentAudio.paused;
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
+            const wasPlaying = !beforeAudio.paused;
+            beforeAudio.pause();
+            afterAudio.pause();
             
             // Update active track button
             document.querySelectorAll('.track-btn').forEach((btn, index) => {
@@ -563,11 +562,22 @@
             document.querySelector(`.track-btn:nth-child(${trackNumber})`).classList.add('active');
 
             currentTrack = trackNumber;
-            const newAudioId = `track${currentTrack}-${currentMode}`;
-            currentAudio = document.getElementById(newAudioId);
+            
+            // Load new tracks
+            beforeAudio = document.getElementById(`track${currentTrack}-before`);
+            afterAudio = document.getElementById(`track${currentTrack}-after`);
+            
+            // Set initial mute states
+            beforeAudio.muted = (currentMode !== 'before');
+            afterAudio.muted = (currentMode === 'before');
+            
+            // Sync the tracks
+            beforeAudio.currentTime = 0;
+            afterAudio.currentTime = 0;
             
             if (wasPlaying) {
-                currentAudio.play();
+                beforeAudio.play();
+                afterAudio.play();
                 document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
             }
         }
@@ -576,20 +586,41 @@
         document.querySelector('.progress-bar').addEventListener('click', function(e) {
             const rect = this.getBoundingClientRect();
             const pos = (e.clientX - rect.left) / rect.width;
-            currentAudio.currentTime = pos * currentAudio.duration;
+            const time = pos * beforeAudio.duration;
+            beforeAudio.currentTime = time;
+            afterAudio.currentTime = time;
         });
 
         document.getElementById('volumeSlider').addEventListener('input', function(e) {
-            currentAudio.volume = e.target.value;
+            beforeAudio.volume = e.target.value;
+            afterAudio.volume = e.target.value;
         });
 
         // Update progress bar and time
         setInterval(updateProgress, 100);
 
         // Handle audio ending
-        currentAudio.addEventListener('ended', function() {
+        beforeAudio.addEventListener('ended', function() {
             isPlaying = false;
             document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+        });
+
+        afterAudio.addEventListener('ended', function() {
+            isPlaying = false;
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+        });
+
+        // Add this to keep tracks synchronized
+        beforeAudio.addEventListener('play', () => {
+            const time = beforeAudio.currentTime;
+            afterAudio.currentTime = time;
+            afterAudio.play();
+        });
+
+        afterAudio.addEventListener('play', () => {
+            const time = afterAudio.currentTime;
+            beforeAudio.currentTime = time;
+            beforeAudio.play();
         });
 
         function copyEmail(event) {
