@@ -539,6 +539,18 @@
         let beforeAudio = document.getElementById('track1-before');
         let afterAudio = document.getElementById('track1-after');
         let isPlaying = false;
+        let audioContext = null;
+        let audioInitialized = false;
+
+        // Initialize audio context
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
 
         // Initialize both tracks and keep them in sync
         function initializeTracks() {
@@ -550,70 +562,106 @@
             afterAudio.playsinline = true;
             beforeAudio.preload = 'auto';
             afterAudio.preload = 'auto';
+            
+            // Set initial volumes
+            beforeAudio.volume = currentMode === 'before' ? 1 : 0;
+            afterAudio.volume = currentMode === 'before' ? 0 : 1;
 
-            // Keep tracks in sync by linking their time updates
-            beforeAudio.addEventListener('timeupdate', function() {
-                if (Math.abs(beforeAudio.currentTime - afterAudio.currentTime) > 0.1) {
-                    afterAudio.currentTime = beforeAudio.currentTime;
-                }
-            });
+            // Remove any existing event listeners
+            beforeAudio.removeEventListener('timeupdate', syncAfterToBefore);
+            afterAudio.removeEventListener('timeupdate', syncBeforeToAfter);
 
-            afterAudio.addEventListener('timeupdate', function() {
-                if (Math.abs(afterAudio.currentTime - beforeAudio.currentTime) > 0.1) {
-                    beforeAudio.currentTime = afterAudio.currentTime;
-                }
-            });
+            // Add new event listeners
+            beforeAudio.addEventListener('timeupdate', syncAfterToBefore);
+            afterAudio.addEventListener('timeupdate', syncBeforeToAfter);
 
-            // Handle iOS audio session
-            document.addEventListener('touchstart', function() {
-                beforeAudio.play().then(function() {
-                    beforeAudio.pause();
-                }).catch(function(error) {
-                    console.log("Audio play failed:", error);
-                });
-                afterAudio.play().then(function() {
-                    afterAudio.pause();
-                }).catch(function(error) {
-                    console.log("Audio play failed:", error);
-                });
-            }, { once: true });
-        }
-
-        function updateProgress() {
-            const progress = document.querySelector('.progress');
-            const currentTime = beforeAudio.currentTime;
-            const duration = beforeAudio.duration;
-            if (duration) {
-                progress.style.width = (currentTime / duration * 100) + '%';
+            if (!audioInitialized) {
+                initializeAudioSession();
             }
         }
 
+        function syncAfterToBefore() {
+            if (Math.abs(beforeAudio.currentTime - afterAudio.currentTime) > 0.1) {
+                afterAudio.currentTime = beforeAudio.currentTime;
+            }
+        }
+
+        function syncBeforeToAfter() {
+            if (Math.abs(afterAudio.currentTime - beforeAudio.currentTime) > 0.1) {
+                beforeAudio.currentTime = afterAudio.currentTime;
+            }
+        }
+
+        function initializeAudioSession() {
+            // Handle iOS audio session initialization
+            const initAudio = async () => {
+                try {
+                    await initAudioContext();
+                    // Try to play both tracks silently
+                    beforeAudio.volume = 0;
+                    afterAudio.volume = 0;
+                    await Promise.all([
+                        beforeAudio.play(),
+                        afterAudio.play()
+                    ]);
+                    beforeAudio.pause();
+                    afterAudio.pause();
+                    beforeAudio.currentTime = 0;
+                    afterAudio.currentTime = 0;
+                    // Reset volumes
+                    beforeAudio.volume = currentMode === 'before' ? 1 : 0;
+                    afterAudio.volume = currentMode === 'before' ? 0 : 1;
+                    audioInitialized = true;
+                } catch (error) {
+                    console.log("Audio initialization failed:", error);
+                }
+            };
+
+            // Initialize on first user interaction
+            const initOnInteraction = () => {
+                initAudio();
+                document.removeEventListener('touchstart', initOnInteraction);
+                document.removeEventListener('click', initOnInteraction);
+            };
+
+            document.addEventListener('touchstart', initOnInteraction, { once: true });
+            document.addEventListener('click', initOnInteraction, { once: true });
+        }
+
         async function togglePlay() {
-            const playPauseBtn = document.getElementById('playPauseBtn');
-            
             try {
+                // Initialize audio context if needed
+                await initAudioContext();
+                
+                const playPauseBtn = document.getElementById('playPauseBtn');
+                
                 if (isPlaying) {
                     beforeAudio.pause();
                     afterAudio.pause();
                     playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
                 } else {
-                    // For iOS, we need to set the current time explicitly
+                    // Ensure both tracks are at the same position
                     const currentTime = beforeAudio.currentTime;
                     beforeAudio.currentTime = currentTime;
                     afterAudio.currentTime = currentTime;
-                    
+
+                    // Set correct volumes before playing
+                    beforeAudio.volume = currentMode === 'before' ? 1 : 0;
+                    afterAudio.volume = currentMode === 'before' ? 0 : 1;
+
+                    // Play both tracks
                     await Promise.all([
-                        beforeAudio.play(),
-                        afterAudio.play()
+                        beforeAudio.play().catch(e => console.log('Before play error:', e)),
+                        afterAudio.play().catch(e => console.log('After play error:', e))
                     ]);
+                    
                     playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 }
                 isPlaying = !isPlaying;
             } catch (error) {
                 console.log("Playback error:", error);
-                // Reset state if playback fails
                 isPlaying = false;
-                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
             }
         }
 
@@ -637,7 +685,7 @@
             }
         }
 
-        function selectTrack(trackNumber) {
+        async function selectTrack(trackNumber) {
             if (currentTrack === trackNumber) return;
 
             const wasPlaying = isPlaying;
@@ -664,21 +712,22 @@
             // Initialize the new tracks
             initializeTracks();
 
-            // Set initial volume states
-            beforeAudio.volume = currentMode === 'before' ? 1 : 0;
-            afterAudio.volume = currentMode === 'before' ? 0 : 1;
-
             // Set time to match previous position
             beforeAudio.currentTime = currentTime;
             afterAudio.currentTime = currentTime;
 
             if (wasPlaying) {
-                Promise.all([
-                    beforeAudio.play(),
-                    afterAudio.play()
-                ]).then(() => {
+                try {
+                    await Promise.all([
+                        beforeAudio.play(),
+                        afterAudio.play()
+                    ]);
                     document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
-                }).catch(e => console.log('Play error:', e));
+                } catch (error) {
+                    console.log("Track switch playback error:", error);
+                    isPlaying = false;
+                    document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+                }
             }
         }
 
