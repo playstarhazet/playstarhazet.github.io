@@ -11,176 +11,85 @@
             font-family: 'Poppins', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 100%);
-            color: #333;
+            background-color: #1e1e1e;
+            color: #ffffff;
             line-height: 1.6;
+            overflow-x: hidden;  /* Prevent horizontal scrolling */
         }
 
         .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-            box-sizing: border-box;
+            width: 100%;
+            margin: 0;
+            padding: 0;
         }
 
-        .photo {
+        .logo {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
             text-align: center;
-            margin-bottom: 40px;
-            border-radius: 15px;
-            overflow: hidden;
-            background-color: transparent;
         }
 
-        .photo img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        .logo img {
+            max-width: min(450px, 50vw);  /* Desktop size */
+            width: 90%;
+            filter: brightness(0) invert(1);
+            animation: neon 2s ease-in-out infinite alternate;
         }
 
-        .intro {
+        @media (max-width: 768px) {
+            .logo img {
+                max-width: 80vw;  /* Bigger on mobile */
+                width: 90%;
+            }
+        }
+
+        .title {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
             text-align: center;
-            font-size: 24px;
-            font-weight: 600;
-            line-height: 1.8;
-            margin-bottom: 60px;
-            color: #222;
         }
 
-        .intro h1 {
+        .title h1 {
             font-size: 48px;
             font-weight: 700;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #222, #444);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin: 0;
+            text-shadow: 0 0 5px rgba(255,255,255,0.7),
+                         0 0 10px rgba(255,255,255,0.5),
+                         0 0 15px rgba(255,255,255,0.3);
+        }
+
+        @keyframes neon {
+            from {
+                filter: brightness(0) invert(1) drop-shadow(0 0 2px rgba(255,255,255,0.5))
+                        drop-shadow(0 0 4px rgba(255,255,255,0.5));
+            }
+            to {
+                filter: brightness(0) invert(1) drop-shadow(0 0 3px rgba(255,255,255,0.7))
+                        drop-shadow(0 0 6px rgba(255,255,255,0.7));
+            }
         }
 
         .demo {
-            margin-bottom: 30px;
-        }
-
-        .demo h2 {
-            text-align: center;
-        }
-
-        .demo .toggle-buttons {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        .demo .toggle-buttons button {
-            padding: 10px 20px;
-            border: 1px solid #ccc;
-            background-color: #f4f4f4;
-            color: #333;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 0;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .demo .toggle-buttons button.active {
-            background-color: #333;
-            color: white;
-        }
-
-        .demo .toggle-buttons button:not(:last-child) {
-            border-right: none;
-        }
-
-        .demo .track-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .demo .track-buttons button {
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .pricing {
-            margin-bottom: 30px;
-        }
-
-        .pricing h2 {
-            text-align: center;
-        }
-
-        .pricing ul {
-            list-style-type: none;
-            padding: 0;
-            text-align: center;
-        }
-
-        .pricing li {
-            line-height: 1.6;
-        }
-
-        .contact {
-            margin-bottom: 30px;
-        }
-
-        .contact h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .contact p {
-            line-height: 1.6;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .contact a {
-            text-decoration: none;
-            color: #00788C;
-            font-weight: bold;
-        }
-
-        .contact-icons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .contact-icons a {
-            background: #f8f8f8;
-            padding: 15px 25px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            min-width: 120px;
-            text-align: center;
-            justify-content: center;
-        }
-
-        .contact-icons a:hover {
-            background: #222;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .contact-icons i {
-            font-size: 24px;
+            position: relative;
+            padding-top: 40vh;
+            width: 100%;
         }
 
         .player-container {
-            background: white;
+            background: none;
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            box-shadow: none;
         }
 
         .player-controls {
@@ -189,22 +98,28 @@
             gap: 15px;
             margin: 20px 0;
             padding: 10px;
-            background: #f8f8f8;
+            background: #333333;
             border-radius: 5px;
         }
 
         #playPauseBtn {
-            background: linear-gradient(45deg, #222, #444);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background: none;
+            color: #ffffff;
+            width: 40px;
+            height: 40px;
+            border: none;
             transition: transform 0.2s ease;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #playPauseBtn:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
+            color: #cccccc;
         }
 
         .progress-container {
@@ -217,7 +132,7 @@
         .progress-bar {
             flex-grow: 1;
             height: 8px;
-            background: #eee;
+            background: #444444;
             border-radius: 4px;
             cursor: pointer;
             position: relative;
@@ -228,168 +143,179 @@
             left: 0;
             top: 0;
             height: 100%;
-            background: linear-gradient(45deg, #00788C, #009aaf);
+            background: linear-gradient(45deg, #ffffff, #cccccc);
             border-radius: 3px;
             width: 0%;
         }
 
-        .volume-control {
+        .toggle-buttons {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
-        #volumeSlider {
-            width: 100px;
+        .toggle-buttons button {
+            padding: 10px 20px;
+            border: 1px solid #444444;
+            background-color: #333333;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-style: italic;
+            transform: skew(-20deg);
+        }
+
+        .toggle-buttons button span {
+            display: inline-block;
+            transform: skew(20deg);
+        }
+
+        .toggle-buttons button.active {
+            background: #8b0000;  /* Blood red color */
+            color: #ffffff;
+            border-color: #a00000;
+        }
+
+        .toggle-buttons button:hover {
+            background: #444444;
+        }
+
+        .track-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
         }
 
         .track-btn {
-            background: white;
-            border: 2px solid #eee;
-            padding: 12px 25px;
-            border-radius: 12px;
+            background: #333333;
+            border: 1px solid #444444;
+            padding: 8px 16px;
+            color: #ffffff;
             font-weight: 600;
+            font-size: 14px;
             transition: all 0.3s ease;
-            width: 180px;
+            width: 100px;
             text-align: center;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-style: italic;
+            transform: skew(-20deg);
+        }
+
+        .track-btn span {
+            display: inline-block;
+            transform: skew(20deg);
         }
 
         .track-btn.active {
-            background: linear-gradient(45deg, #222, #444);
-            border-color: transparent;
-            transform: translateY(-3px);
+            background: #8b0000;  /* Blood red color */
+            color: #ffffff;
+            border-color: #a00000;
         }
 
         .track-btn:hover {
-            background: #e0e0e0;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .track-btn.active:hover {
-            background: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .demo h2, .pricing h2, .contact h2 {
-            font-size: 36px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 30px;
-            color: #222;
+            background: #444444;
         }
 
         .pricing {
-            background: white;
+            background: none;
             padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            box-shadow: none;
+        }
+
+        .pricing h2 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
         }
 
         .pricing ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
             max-width: 600px;
             margin: 0 auto;
         }
 
         .pricing li {
-            font-size: 16px;
+            line-height: 1.6;
             padding: 8px 0;
+            color: #ffffff;
         }
 
         .pricing li strong {
-            color: #222;
+            color: #ffffff;
             font-size: 18px;
         }
 
         .contact {
-            background: white;
+            background: none;
             padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: none;
+        }
+
+        .contact h2 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        .contact p {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .contact-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         .contact-icons a {
-            background: #f8f8f8;
+            background: #333333;
             padding: 15px 25px;
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+            justify-content: center;
+            color: #ffffff;
+            text-decoration: none;
         }
 
         .contact-icons a:hover {
-            background: #222;
-            color: white;
-            transform: translateY(-2px);
+            background: #8b0000;  /* Blood red color */
+            color: #ffffff;
         }
 
         .contact-icons i {
             font-size: 24px;
         }
 
-        .player-container h2 {
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-size: 36px;
-            font-weight: 700;
-            text-align: center;
-            color: #222;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                margin: 20px auto;
-            }
-
-            .contact-icons {
-                gap: 10px;
-            }
-
-            .contact-icons a {
-                width: calc(50% - 10px);
-                min-width: unset;
-                padding: 12px 15px;
-            }
-
-            .track-buttons {
-                flex-wrap: wrap;
-            }
-
-            .track-btn {
-                width: calc(50% - 5px);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .intro h1 {
-                font-size: 36px;
-                line-height: 1.2;
-            }
-
-            .intro {
-                font-size: 20px;
-            }
-
-            .player-controls {
-                flex-wrap: wrap;
-            }
-
-            .volume-control {
-                width: 100%;
-                justify-content: center;
-                margin-top: 10px;
-            }
-        }
-
-        /* Add these styles for the notification */
         .notification {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #222;
-            color: white;
+            background: #333333;
+            color: #ffffff;
             padding: 12px 24px;
             border-radius: 8px;
             opacity: 0;
@@ -401,24 +327,108 @@
             opacity: 1;
         }
 
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffffff;
+        }
+
+        #volumeSlider {
+            width: 100px;
+            accent-color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .demo {
+                padding-top: 45vh;
+            }
+
+            .title h1 {
+                font-size: 36px;
+            }
+
+            .track-buttons {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 0 10px;
+            }
+
+            .track-btn {
+                width: calc(50% - 5px);  /* Two buttons per row with gap */
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title h1 {
+                font-size: 28px;
+                letter-spacing: 2px;
+            }
+
+            .track-btn {
+                width: calc(50% - 5px);
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .logo {
+                top: 12%;
+            }
+            
+            .title {
+                top: 25%;
+            }
+        }
+
         .nowrap {
             white-space: nowrap;
         }
 
+        .player-container h2 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        .pricing h2 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        .contact h2 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Photo Section -->
-        <div class="photo">
-            <img src="photo.jpg" alt="Artist Photo with Logo">
+        <!-- Logo Section -->
+        <div class="logo">
+            <img src="logo.png" alt="Playstar Hazet Logo - White text with neon glow effect">
         </div>
 
-        <!-- Intro Section -->
-        <div class="intro">
-            <h1>Yo! This is <span class="nowrap">Playstar Hazet</span></h1>
-            I make beatz bang hard and vocals stand out<br>
-            Hit me up if you want to get your music sound dope
+        <!-- Title Section -->
+        <div class="title">
+            <h1>MIX / MASTER</h1>
         </div>
 
         <!-- Demo Section -->
@@ -426,8 +436,8 @@
             <div class="player-container">
                 <h2>Demo</h2>
                 <div class="toggle-buttons">
-                    <button class="before active" onclick="switchTrackMode('before')">Before</button>
-                    <button class="after" onclick="switchTrackMode('after')">After</button>
+                    <button class="before active" onclick="switchTrackMode('before')"><span>Before</span></button>
+                    <button class="after" onclick="switchTrackMode('after')"><span>After</span></button>
                 </div>
                 
                 <div class="player-controls">
@@ -446,10 +456,10 @@
                 </div>
 
                 <div class="track-buttons">
-                    <button onclick="selectTrack(1)" class="track-btn active">Track 1</button>
-                    <button onclick="selectTrack(2)" class="track-btn">Track 2</button>
-                    <button onclick="selectTrack(3)" class="track-btn">Track 3</button>
-                    <button onclick="selectTrack(4)" class="track-btn">Track 4</button>
+                    <button onclick="selectTrack(1)" class="track-btn active"><span>Track 1</span></button>
+                    <button onclick="selectTrack(2)" class="track-btn"><span>Track 2</span></button>
+                    <button onclick="selectTrack(3)" class="track-btn"><span>Track 3</span></button>
+                    <button onclick="selectTrack(4)" class="track-btn"><span>Track 4</span></button>
                 </div>
             </div>
             <audio id="track1-before" src="track1-before.mp3"></audio>
@@ -488,7 +498,6 @@
         <!-- Contact Section -->
         <div class="contact">
             <h2>Contact</h2>
-            <p>Feel free to reach out for inquiries or collaborations!</p>
             <div class="contact-icons">
                 <a href="#" onclick="copyEmail(event)">
                     <i class="fas fa-envelope"></i> Email
@@ -510,11 +519,36 @@
         let afterAudio = document.getElementById('track1-after');
         let isPlaying = false;
 
+        // Initialize both tracks and keep them in sync
+        function initializeTracks() {
+            beforeAudio.load();
+            afterAudio.load();
+            
+            // Keep tracks in sync by linking their time updates
+            beforeAudio.addEventListener('timeupdate', function() {
+                if (Math.abs(beforeAudio.currentTime - afterAudio.currentTime) > 0.1) {
+                    afterAudio.currentTime = beforeAudio.currentTime;
+                }
+            });
+
+            afterAudio.addEventListener('timeupdate', function() {
+                if (Math.abs(afterAudio.currentTime - beforeAudio.currentTime) > 0.1) {
+                    beforeAudio.currentTime = afterAudio.currentTime;
+                }
+            });
+
+            // Start loading both tracks
+            beforeAudio.preload = 'auto';
+            afterAudio.preload = 'auto';
+        }
+
         function updateProgress() {
             const progress = document.querySelector('.progress');
-            const currentTime = currentMode === 'before' ? beforeAudio.currentTime : afterAudio.currentTime;
-            const duration = currentMode === 'before' ? beforeAudio.duration : afterAudio.duration;
-            progress.style.width = (currentTime / duration * 100) + '%';
+            const currentTime = beforeAudio.currentTime;
+            const duration = beforeAudio.duration;
+            if (duration) {
+                progress.style.width = (currentTime / duration * 100) + '%';
+            }
         }
 
         function togglePlay() {
@@ -525,82 +559,82 @@
                 afterAudio.pause();
                 playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
             } else {
-                // Reset both audio elements
-                beforeAudio.currentTime = 0;
-                afterAudio.currentTime = 0;
-                
-                // Set mute states before playing
-                beforeAudio.muted = (currentMode !== 'before');
-                afterAudio.muted = (currentMode === 'before');
-                
-                // Use Promise.all to ensure both tracks start together
                 Promise.all([
-                    beforeAudio.play().catch(e => console.log('Play error:', e)),
-                    afterAudio.play().catch(e => console.log('Play error:', e))
+                    beforeAudio.play(),
+                    afterAudio.play()
                 ]).then(() => {
                     playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                });
+                }).catch(e => console.log('Play error:', e));
             }
             isPlaying = !isPlaying;
-        }
-
-        function updateActiveButton() {
-            const buttons = document.querySelectorAll('.toggle-buttons button');
-            buttons.forEach(button => {
-                button.classList.remove('active');
-            });
-            document.querySelector(`.${currentMode}`).classList.add('active');
         }
 
         function switchTrackMode(mode) {
             if (currentMode === mode) return;
             currentMode = mode;
-            updateActiveButton();
+            
+            // Update active button
+            document.querySelectorAll('.toggle-buttons button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.${mode}`).classList.add('active');
 
+            // Crossfade between tracks
             if (mode === 'before') {
-                beforeAudio.muted = false;
-                afterAudio.muted = true;
+                beforeAudio.volume = 1;
+                afterAudio.volume = 0;
             } else {
-                beforeAudio.muted = true;
-                afterAudio.muted = false;
+                beforeAudio.volume = 0;
+                afterAudio.volume = 1;
             }
         }
 
         function selectTrack(trackNumber) {
             if (currentTrack === trackNumber) return;
 
-            const wasPlaying = !beforeAudio.paused;
-            beforeAudio.pause();
-            afterAudio.pause();
-            
+            const wasPlaying = isPlaying;
+            if (wasPlaying) {
+                beforeAudio.pause();
+                afterAudio.pause();
+            }
+
             // Update active track button
-            document.querySelectorAll('.track-btn').forEach((btn, index) => {
+            document.querySelectorAll('.track-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`.track-btn:nth-child(${trackNumber})`).classList.add('active');
 
             currentTrack = trackNumber;
             
+            // Store current time before switching
+            const currentTime = beforeAudio.currentTime;
+
             // Load new tracks
             beforeAudio = document.getElementById(`track${currentTrack}-before`);
             afterAudio = document.getElementById(`track${currentTrack}-after`);
             
-            // Set initial mute states
-            beforeAudio.muted = (currentMode !== 'before');
-            afterAudio.muted = (currentMode === 'before');
-            
-            // Sync the tracks
-            beforeAudio.currentTime = 0;
-            afterAudio.currentTime = 0;
-            
+            // Initialize the new tracks
+            initializeTracks();
+
+            // Set initial volume states
+            beforeAudio.volume = currentMode === 'before' ? 1 : 0;
+            afterAudio.volume = currentMode === 'before' ? 0 : 1;
+
+            // Set time to match previous position
+            beforeAudio.currentTime = currentTime;
+            afterAudio.currentTime = currentTime;
+
             if (wasPlaying) {
-                beforeAudio.play();
-                afterAudio.play();
-                document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+                Promise.all([
+                    beforeAudio.play(),
+                    afterAudio.play()
+                ]).then(() => {
+                    document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+                }).catch(e => console.log('Play error:', e));
             }
         }
 
-        // Add event listeners
+        // Progress bar click handler
         document.querySelector('.progress-bar').addEventListener('click', function(e) {
             const rect = this.getBoundingClientRect();
             const pos = (e.clientX - rect.left) / rect.width;
@@ -609,22 +643,23 @@
             afterAudio.currentTime = time;
         });
 
+        // Volume control
         document.getElementById('volumeSlider').addEventListener('input', function(e) {
-            // Check if volume control is supported
-            if (beforeAudio.volume !== undefined && afterAudio.volume !== undefined) {
-                beforeAudio.volume = e.target.value;
-                afterAudio.volume = e.target.value;
+            const value = parseFloat(e.target.value);
+            if (currentMode === 'before') {
+                beforeAudio.volume = value;
             } else {
-                // Display message or hide volume control for iOS
-                this.disabled = true;
-                this.parentElement.style.display = 'none';
+                afterAudio.volume = value;
             }
         });
 
-        // Update progress bar and time
-        setInterval(updateProgress, 100);
+        // Initialize first track
+        initializeTracks();
 
-        // Handle audio ending
+        // Update progress bar
+        setInterval(updateProgress, 50);
+
+        // Handle track ending
         beforeAudio.addEventListener('ended', function() {
             isPlaying = false;
             document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
@@ -639,18 +674,14 @@
             event.preventDefault();
             const email = 'playstarhazet@gmail.com';
             
-            // Copy to clipboard
             navigator.clipboard.writeText(email).then(() => {
-                // Show notification
                 const notification = document.createElement('div');
                 notification.className = 'notification';
                 notification.textContent = 'Email address copied';
                 document.body.appendChild(notification);
                 
-                // Show the notification
                 setTimeout(() => notification.classList.add('show'), 10);
                 
-                // Remove the notification after 2 seconds
                 setTimeout(() => {
                     notification.classList.remove('show');
                     setTimeout(() => notification.remove(), 300);
@@ -658,10 +689,9 @@
             });
         }
 
-        // Add this function to check device on page load
+        // Check volume support on page load
         function checkVolumeSupport() {
             const volumeControl = document.querySelector('.volume-control');
-            // Check if running on iOS
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             
             if (isIOS) {
@@ -669,7 +699,6 @@
             }
         }
 
-        // Call the function when the page loads
         window.addEventListener('load', checkVolumeSupport);
     </script>
 </body>
