@@ -563,9 +563,9 @@
             beforeAudio.preload = 'auto';
             afterAudio.preload = 'auto';
             
-            // Set initial volumes
-            beforeAudio.volume = currentMode === 'before' ? 1 : 0;
-            afterAudio.volume = currentMode === 'before' ? 0 : 1;
+            // Set initial mute states
+            beforeAudio.muted = (currentMode !== 'before');
+            afterAudio.muted = (currentMode === 'before');
 
             // Remove any existing event listeners
             beforeAudio.removeEventListener('timeupdate', syncAfterToBefore);
@@ -645,9 +645,9 @@
                     beforeAudio.currentTime = currentTime;
                     afterAudio.currentTime = currentTime;
 
-                    // Set correct volumes before playing
-                    beforeAudio.volume = currentMode === 'before' ? 1 : 0;
-                    afterAudio.volume = currentMode === 'before' ? 0 : 1;
+                    // Set correct mute states before playing
+                    beforeAudio.muted = (currentMode !== 'before');
+                    afterAudio.muted = (currentMode === 'before');
 
                     // Play both tracks
                     await Promise.all([
@@ -675,13 +675,13 @@
             });
             document.querySelector(`.${mode}`).classList.add('active');
 
-            // Crossfade between tracks
+            // Immediately set volumes (no crossfade)
             if (mode === 'before') {
-                beforeAudio.volume = 1;
-                afterAudio.volume = 0;
+                beforeAudio.muted = false;
+                afterAudio.muted = true;
             } else {
-                beforeAudio.volume = 0;
-                afterAudio.volume = 1;
+                beforeAudio.muted = true;
+                afterAudio.muted = false;
             }
         }
 
