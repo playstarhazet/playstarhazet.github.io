@@ -680,13 +680,15 @@
             });
             document.querySelector(`.${mode}`).classList.add('active');
 
-            // Immediately set volumes (no crossfade)
+            // Set mute states and ensure volumes are correct
             if (mode === 'before') {
                 beforeAudio.muted = false;
                 afterAudio.muted = true;
+                beforeAudio.volume = document.getElementById('volumeSlider').value;
             } else {
                 beforeAudio.muted = true;
                 afterAudio.muted = false;
+                afterAudio.volume = document.getElementById('volumeSlider').value;
             }
         }
 
@@ -740,25 +742,37 @@
         document.querySelector('.progress-bar').addEventListener('click', function(e) {
             const rect = this.getBoundingClientRect();
             const pos = (e.clientX - rect.left) / rect.width;
-            const time = pos * beforeAudio.duration;
-            beforeAudio.currentTime = time;
-            afterAudio.currentTime = time;
+            const duration = beforeAudio.duration || afterAudio.duration;
+            if (duration) {
+                const time = pos * duration;
+                beforeAudio.currentTime = time;
+                afterAudio.currentTime = time;
+            }
         });
 
-        // Volume control
+        // Volume control with improved handling
         document.getElementById('volumeSlider').addEventListener('input', function(e) {
             const value = parseFloat(e.target.value);
-            if (currentMode === 'before') {
-                beforeAudio.volume = value;
-            } else {
-                afterAudio.volume = value;
+            const activeAudio = currentMode === 'before' ? beforeAudio : afterAudio;
+            if (activeAudio && !activeAudio.muted) {
+                activeAudio.volume = value;
             }
         });
 
         // Initialize first track
         initializeTracks();
 
-        // Update progress bar
+        function updateProgress() {
+            const progress = document.querySelector('.progress');
+            const activeAudio = currentMode === 'before' ? beforeAudio : afterAudio;
+            
+            if (activeAudio && activeAudio.duration) {
+                const percentage = (activeAudio.currentTime / activeAudio.duration) * 100;
+                progress.style.width = percentage + '%';
+            }
+        }
+
+        // Update progress bar more frequently
         setInterval(updateProgress, 50);
 
         // Handle track ending
@@ -794,13 +808,26 @@
         // Check volume support on page load
         function checkVolumeSupport() {
             const volumeControl = document.querySelector('.volume-control');
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            // More comprehensive iOS detection
+            const isIOS = [
+                'iPad Simulator',
+                'iPhone Simulator',
+                'iPod Simulator',
+                'iPad',
+                'iPhone',
+                'iPod',
+                'Safari'
+            ].includes(navigator.platform) || 
+            (navigator.userAgent.includes("Mac") && "ontouchend" in document) ||
+            /iPad|iPhone|iPod/.test(navigator.userAgent);
             
             if (isIOS) {
                 volumeControl.style.display = 'none';
             }
         }
 
+        // Call volume check immediately and on load
+        checkVolumeSupport();
         window.addEventListener('load', checkVolumeSupport);
     </script>
 </body>
