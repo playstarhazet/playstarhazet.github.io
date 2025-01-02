@@ -23,13 +23,20 @@
             padding: 0;
         }
 
+        /* Welcome screen */
+        .welcome-screen {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
         .logo {
-            position: absolute;
-            top: 15%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
+            position: relative;
             text-align: center;
+            margin-bottom: 30px;
         }
 
         .logo img {
@@ -47,11 +54,7 @@
         }
 
         .title {
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
+            position: relative;
             text-align: center;
         }
 
@@ -79,8 +82,7 @@
         }
 
         .demo {
-            position: relative;
-            padding-top: 40vh;
+            padding-top: 0;
             width: 100%;
         }
 
@@ -178,8 +180,10 @@
             border-color: #a00000;
         }
 
-        .toggle-buttons button:hover {
-            background: #444444;
+        .toggle-buttons button:hover,
+        .toggle-buttons button:active,
+        .toggle-buttons button:focus {
+            background: #8b0000;  /* Blood red color */
         }
 
         .track-buttons {
@@ -216,8 +220,10 @@
             border-color: #a00000;
         }
 
-        .track-btn:hover {
-            background: #444444;
+        .track-btn:hover,
+        .track-btn:active,
+        .track-btn:focus {
+            background: #8b0000;  /* Blood red color */
         }
 
         .pricing {
@@ -300,9 +306,10 @@
             text-decoration: none;
         }
 
-        .contact-icons a:hover {
+        .contact-icons a:hover,
+        .contact-icons a:active,
+        .contact-icons a:focus {
             background: #8b0000;  /* Blood red color */
-            color: #ffffff;
         }
 
         .contact-icons i {
@@ -341,7 +348,7 @@
 
         @media (max-width: 768px) {
             .demo {
-                padding-top: 45vh;
+                padding-top: 0;
             }
 
             .title h1 {
@@ -417,18 +424,32 @@
             text-transform: uppercase;
             letter-spacing: 4px;
         }
+
+        /* Remove default focus outline and add custom one */
+        button:focus,
+        a:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.5);
+        }
+
+        /* Add touch-action manipulation for better mobile handling */
+        button,
+        a {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Logo Section -->
-        <div class="logo">
-            <img src="logo.png" alt="Playstar Hazet Logo - White text with neon glow effect">
-        </div>
-
-        <!-- Title Section -->
-        <div class="title">
-            <h1>MIX / MASTER</h1>
+        <!-- Welcome Screen -->
+        <div class="welcome-screen">
+            <div class="logo">
+                <img src="logo.png" alt="Playstar Hazet Logo - White text with neon glow effect">
+            </div>
+            <div class="title">
+                <h1>MIX / MASTER</h1>
+            </div>
         </div>
 
         <!-- Demo Section -->
@@ -524,6 +545,12 @@
             beforeAudio.load();
             afterAudio.load();
             
+            // iOS specific setup
+            beforeAudio.playsinline = true;
+            afterAudio.playsinline = true;
+            beforeAudio.preload = 'auto';
+            afterAudio.preload = 'auto';
+
             // Keep tracks in sync by linking their time updates
             beforeAudio.addEventListener('timeupdate', function() {
                 if (Math.abs(beforeAudio.currentTime - afterAudio.currentTime) > 0.1) {
@@ -537,9 +564,19 @@
                 }
             });
 
-            // Start loading both tracks
-            beforeAudio.preload = 'auto';
-            afterAudio.preload = 'auto';
+            // Handle iOS audio session
+            document.addEventListener('touchstart', function() {
+                beforeAudio.play().then(function() {
+                    beforeAudio.pause();
+                }).catch(function(error) {
+                    console.log("Audio play failed:", error);
+                });
+                afterAudio.play().then(function() {
+                    afterAudio.pause();
+                }).catch(function(error) {
+                    console.log("Audio play failed:", error);
+                });
+            }, { once: true });
         }
 
         function updateProgress() {
@@ -551,22 +588,33 @@
             }
         }
 
-        function togglePlay() {
+        async function togglePlay() {
             const playPauseBtn = document.getElementById('playPauseBtn');
             
-            if (isPlaying) {
-                beforeAudio.pause();
-                afterAudio.pause();
-                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-            } else {
-                Promise.all([
-                    beforeAudio.play(),
-                    afterAudio.play()
-                ]).then(() => {
+            try {
+                if (isPlaying) {
+                    beforeAudio.pause();
+                    afterAudio.pause();
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                } else {
+                    // For iOS, we need to set the current time explicitly
+                    const currentTime = beforeAudio.currentTime;
+                    beforeAudio.currentTime = currentTime;
+                    afterAudio.currentTime = currentTime;
+                    
+                    await Promise.all([
+                        beforeAudio.play(),
+                        afterAudio.play()
+                    ]);
                     playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                }).catch(e => console.log('Play error:', e));
+                }
+                isPlaying = !isPlaying;
+            } catch (error) {
+                console.log("Playback error:", error);
+                // Reset state if playback fails
+                isPlaying = false;
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
             }
-            isPlaying = !isPlaying;
         }
 
         function switchTrackMode(mode) {
